@@ -28,6 +28,12 @@ jobs:
       - name: Publish to folder
         run: msbuild /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="\published\"
 
+      - name: dotnet install ef
+         run: dotnet tool install -g dotnet-ef --version 7.0.14
+
+      - name: dotnet bundle migration
+         run: dotnet ef migrations bundle --runtime linux-x64 -p DotNetCoreSqlDb/DotNetCoreSqlDb.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
